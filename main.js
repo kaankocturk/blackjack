@@ -8,19 +8,37 @@ var dealeraces=0;
 var count=0;
 
 function init(){
-  initPlayer();
-}
-
-function initPlayer(){
   $('.begin').css('visibility', 'visible');
   $('#myModal').modal('show');
+
   $('.begin').click(function(){
-  player.name= $('#name').val();
-  player.balance= parseInt($('#deposit').val());
-  $('#myModal').modal('hide');
-  $('#balance').text(' '+player.balance);
-  startgame();
-});
+    player.name= $('#name').val();
+    player.balance= parseInt($('#deposit').val());
+    $('#myModal').modal('hide');
+    $('#balance').text(' '+player.balance);
+    startgame();
+  });
+
+  $('.stand').click(function(){
+    $('.dealercards #d1').css('visibility', 'visible');
+    $('.stand').css('visibility', 'hidden');
+    $('.hit').css('visibility', 'hidden');
+    dealerTurn();
+  });
+
+  $('.hit').click(function(){
+    draw('player');
+    if(playerCount>21){
+      if(!playeraces){
+        $('.stand').css('visibility', 'hidden');
+        $('.hit').css('visibility', 'hidden');
+      defeat();
+    } else{
+      playeraces-=1;
+      playerCount-=10;
+    }
+    }
+  });
 }
 
 function startgame(){
@@ -28,17 +46,17 @@ function startgame(){
   $('.feedback').text('Bets Please');
   $('.bet').css('visibility', 'visible');
   $('.bet').click(function(){
-  bet = $('#bet').val();
-  $('#totalbet').text(bet);
-  $('.bet').off();
-  player.balance -= parseInt(bet);
-  $('#balance').text(' '+player.balance);
-  $('.bet').css('visibility', 'hidden');
-  dealcards();
+    bet = $('#bet').val();
+    $('#totalbet').text(bet);
+    player.balance -= parseInt(bet);
+    $('#balance').text(' '+player.balance);
+    $('.bet').css('visibility', 'hidden');
+    dealcards();
   });
 }
 
   function dealcards(){
+    $('.bet').off();
     draw('player');
     draw('dealer');
     draw('player');
@@ -48,40 +66,36 @@ function startgame(){
     playerDecision();
   }
 
+  function draw(who){
+    var card = generateCard();
+    if(who==='player'){
+      if (parseInt(card.value)===1) {
+        playeraces+=1;
+        playerCount+=10;
+      }
+      playerCount+= parseInt(card.value);
+      $('.playercards').append(card.picture);
+    }
+    else{
+      count++;
+      if (parseInt(card.value)===1) {
+        dealeraces+=1;
+        dealerCount+=10;
+      }
+      dealerCount+=parseInt(card.value);
+      card.picture.attr('id', 'd'+count);
+      $('.dealercards').append(card.picture);
+    }
+  }
+
   function playerDecision(){
     $('.stand').css('visibility', 'visible');
     $('.hit').css('visibility', 'visible');
-    $('.stand').click(function(){
-      $('.dealercards #d1').css('visibility', 'visible');
-      dealerTurn();
-      $('.hit').off();
-      $('.stand').off();
-      $('.stand').css('visibility', 'hidden');
-      $('.hit').css('visibility', 'hidden');
-    });
-
-    $('.hit').click(function(){
-      draw('player');
-      if(playerCount>21){
-        if(!playeraces){
-        defeat();
-        $('.stand').css('visibility', 'hidden');
-        $('.hit').css('visibility', 'hidden');
-      } else{
-        playeraces-=1;
-        playerCount-=10;
-        playerDecision();
-      }
-      } else{
-        playerDecision();
-      }
-    });
   }
 
 function dealerTurn(){
   if (dealerCount>16){
-      if (dealerCount>playerCount){defeat();} else{win();}
-      return true;
+      compare();
     }
     else{
     draw('dealer');
@@ -94,36 +108,14 @@ function dealerTurn(){
       dealerTurn();
     }
   } else if (dealerCount>16){
-      if (dealerCount>playerCount){defeat();} else{win();}
+      compare();
+      // return true;
     }
     else{
       dealerTurn();
     }
   }
 }
-
-function draw(who){
-  var card = generateCard();
-  if(who==='player'){
-    if (parseInt(card.value)===1) {
-      playeraces+=1;
-      playerCount+=10;
-    }
-    playerCount+= parseInt(card.value);
-    $('.playercards').append(card.picture);
-  }
-  else{
-    count++;
-    if (parseInt(card.value)===1) {
-      dealeraces+=1;
-      dealerCount+=10;
-    }
-    dealerCount+=parseInt(card.value);
-    card.picture.attr('id', 'd'+count);
-    $('.dealercards').append(card.picture);
-  }
-}
-
 
 function generateCard(){
   var value = Math.floor(Math.random()*13+1).toString();
@@ -148,33 +140,51 @@ if(value>9){value=10;}
   return {value: value, picture: $('<img>').addClass('card').attr('src', cardsrc)};
 }
 
+function compare(){
+    if(dealerCount>playerCount){
+      defeat();
+    }
+    else if (dealerCount===playerCount){
+      tie();
+    }
+    else{
+      win();
+    }
+}
+
 function defeat(){
     $('.feedback').text('Round lost!');
     $('.continue').css('visibility','visible');
     $('.continue').click(function(){
-      if(player.balance>0){
+    if(player.balance>0){
       reinitialize();
     }
     else{
-          alert('you lost!');
+      alert('you lost!');
     }
     });
 }
 
+function tie(){
+  $('.feedback').text('Round tied!');
+  $('.continue').css('visibility','visible');
+  player.balance += parseInt(bet);
+  $('.continue').click(reinitialize);
+  }
+
 function win(){
   $('.feedback').text('Round won!');
   $('.continue').css('visibility','visible');
-  $('.continue').click(function(){
   player.balance += parseInt(bet)*2;
-  $('#balance').text(' '+player.balance);
-  reinitialize();
-  });
+  $('.continue').click(reinitialize);
 }
 
 function reinitialize(){
+  $('#balance').text(' '+player.balance);
+  $('.continue').off();
+  $('.continue').css('visibility','hidden');
   playerCount=0;
   dealerCount=0;
-  bet=0;
   playeraces=0;
   dealeraces=0;
   count=0;
