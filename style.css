@@ -1,0 +1,22 @@
+
+body {
+background-image: url('cardTableTile.png');
+font-size: 18px;
+color: #FCC;
+text-align: center;
+}
+
+img{
+  height: 150px;
+}
+.feedback{
+  font-size: 36px;
+}
+
+.btn{
+  visibility: hidden;
+}
+
+.row{
+  min-height: 200px;
+}

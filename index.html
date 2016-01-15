@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BLACKJACK</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="col-xs-12">
+      <p class="feedback"></p>
+    </div>
+    <div class="row" id="row1">
+      <div class="col-xs-9 col-xs-offset-3 dealercards"></div>
+    </div>
+    <div class="row" id="row2">
+      <div class="col-xs-9 col-xs-offset-3 playercards"></div>
+    </div>
+    <div class="row" id="row3">
+      <div class="col-xs-3"><p>Balance:<span id="balance"></span></p><p>Total bet:<span id="totalbet"></span></p></div>
+      <div class="col-xs-2 col-xs-offset-1">
+         <button type="button" class="btn btn-success bet">Bet</button>
+         <input type="number" class="form-control" id="bet" placeholder="amount">
+        </div>
+      <div class="col-xs-2 col-xs-offset-1">  <button type="button" class="btn btn-success hit">Hit</button></div>
+      <div class="col-xs-2 col-xs-offset-1">  <button type="button" class="btn btn-warning stand">Stand</button></div>
+    </div>
+    <div class="row" id="row4">
+      <div class="col-xs-6 col-xs-offset-3">
+        <button type="button" class="btn btn-info btn-lg continue">Continue</button>
+        </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Enter details</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" class="form-control" id="name" placeholder="Name">
+          </div>
+          <div class="form-group">
+            <label for="deposit">Deposit:</label>
+            <input type="number" class="form-control" id="deposit" placeholder="amount">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary begin">Begin</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.0.0/lodash.min.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
